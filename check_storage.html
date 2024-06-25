@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Storage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #001f3f, #ff4136, #ffb6c1);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 80%;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border: 2px solid #aaa;
+        }
+
+        th, td {
+            border: 2px solid #aaa;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .clear-btn {
+            padding: 10px 20px;
+            background-color: #c0392b;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            background-color: #e74c3c;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Inventory</h2>
+        <table id="inventoryTable">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Product ID</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Expiry Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Table body will be filled dynamically -->
+            </tbody>
+        </table>
+        <div>
+            <select id="rowSelect">
+                <option value="all">Select All</option>
+                <!-- Options will be filled dynamically -->
+            </select>
+            <button class="clear-btn" onclick="clearSelectedRow()">Clear Selected Row</button>
+        </div>
+    </div>
+
+    <script>
+        function renderInventoryTable() {
+            var inventoryData = JSON.parse(localStorage.getItem('inventory')) || [];
+            var tableBody = document.querySelector('#inventoryTable tbody');
+            tableBody.innerHTML = '';
+
+            var selectOptions = document.getElementById('rowSelect');
+            selectOptions.innerHTML = ''; // Clear existing options
+
+            // Add Select All option
+            var selectAllOption = document.createElement('option');
+            selectAllOption.value = "all";
+            selectAllOption.textContent = "Select All";
+            selectOptions.appendChild(selectAllOption);
+
+            inventoryData.forEach(function (item, index) {
+                if (item.quantity > 0) {
+                    var row = `<tr>
+                                <td>${index + 1}</td>
+                                <td>${item.id}</td>
+                                <td>${item.name}</td>
+                                <td>${item.quantity}</td>
+                                <td>${item.expiryDate}</td>
+                            </tr>`;
+                    tableBody.insertAdjacentHTML('beforeend', row);
+
+                    var option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = `Row ${index + 1}`;
+                    selectOptions.appendChild(option);
+                }
+            });
+        }
+
+        function clearSelectedRow() {
+            var selectedIndex = document.getElementById('rowSelect').value;
+            var inventoryData = JSON.parse(localStorage.getItem('inventory')) || [];
+            
+            if (selectedIndex === "all") {
+                localStorage.removeItem('inventory');
+            } else if (selectedIndex !== "") {
+                inventoryData.splice(selectedIndex, 1);
+                localStorage.setItem('inventory', JSON.stringify(inventoryData));
+            }
+
+            renderInventoryTable(); // Refresh the table
+        }
+
+        // Render the table on page load
+        renderInventoryTable();
+    </script>
+</body>
+
+</html>

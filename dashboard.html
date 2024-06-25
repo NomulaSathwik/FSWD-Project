@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .outer-container {
+            background: linear-gradient(to bottom right, #001f3f, #ff4136, #ffb6c1); /* Deep navy blue to bright red to pale pink gradient */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: #ffffff; /* White background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-option {
+            margin-bottom: 20px; /* Add space between containers */
+        }
+
+        .dashboard-option a {
+            display: block;
+            padding: 12px 24px;
+            color: #ffffff; /* White text */
+            background-color: #ff4136; /* Bright red background */
+            border-radius: 4px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .dashboard-option a:hover {
+            background-color: #ffb6c1; /* Pale pink background on hover */
+            color: #000000; /* Black text on hover */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="outer-container">
+        <div class="container w-96">
+            <h2 class="text-center text-2xl font-bold text-gray-800 mb-6">Dashboard</h2>
+            <div class="dashboard-option">
+                <a href="add_inventory.html">Add Inventory</a>
+            </div>
+            <div class="dashboard-option">
+                <a href="remove_inventory.html">Remove Inventory</a>
+            </div>
+            <div class="dashboard-option">
+                <a href="check_storage.html">Check Storage</a>
+            </div>
+            <div class="dashboard-option">
+                <a href="index.html">Logout</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

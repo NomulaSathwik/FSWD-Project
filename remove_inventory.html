@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remove Inventory</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #001f3f, #ff4136, #ffb6c1); /* Deep navy blue to bright red to pale pink gradient */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #555; /* Darker border color */
+            border-radius: 4px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            margin-top: 10px;
+            text-align: center;
+            color: #4caf50;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Remove Inventory</h2>
+        <form id="removeInventoryForm">
+            <div id="idContainer">
+                <label for="removeId" class="input-label">Enter ID:</label>
+                <input type="text" id="removeId" name="removeId" placeholder="ID" class="input-field">
+            </div>
+            <div id="quantityContainer">
+                <label for="removeQuantity" class="input-label">Enter Quantity to Remove:</label>
+                <input type="number" id="removeQuantity" name="removeQuantity" placeholder="Quantity" class="input-field">
+            </div>
+            <button type="submit" class="submit-btn">Remove Inventory</button>
+            <div id="message" class="message"></div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('removeInventoryForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            var id = document.getElementById('removeId').value;
+            var quantity = document.getElementById('removeQuantity').value;
+
+            // Logic to remove data based on ID and quantity
+            var removedData = removeInventory(id, quantity);
+
+            if (removedData) {
+                document.getElementById('message').textContent = 'Inventory data removed successfully!';
+            } else {
+                document.getElementById('message').textContent = 'Failed to remove inventory data. Please check your input.';
+            }
+
+            // Clear form fields
+            document.getElementById('removeId').value = '';
+            document.getElementById('removeQuantity').value = '';
+        });
+
+        // Function to remove inventory data
+        function removeInventory(id, quantity) {
+            var inventoryData = JSON.parse(localStorage.getItem('inventory'));
+
+            if (!inventoryData || inventoryData.length === 0) {
+                return false;
+            }
+
+            var itemIndex = inventoryData.findIndex(function (item) {
+                return item.id === id;
+            });
+
+            if (itemIndex === -1) {
+                // Product not found
+                document.getElementById('message').textContent = 'Product not found in inventory.';
+                return false;
+            }
+
+            // If quantity is specified, remove the specified quantity
+            if (quantity && !isNaN(quantity)) {
+                if (inventoryData[itemIndex].quantity >= parseInt(quantity)) {
+                    inventoryData[itemIndex].quantity -= parseInt(quantity);
+                } else {
+                    // Quantity to remove is greater than available quantity
+                    document.getElementById('message').textContent = 'Quantity to remove exceeds available quantity.';
+                    return false;
+                }
+            } else {
+                // Quantity not specified
+                document.getElementById('message').textContent = 'Please enter a valid quantity.';
+                return false;
+            }
+
+            // Remove the item if quantity becomes zero
+            if (inventoryData[itemIndex].quantity === 0) {
+                inventoryData.splice(itemIndex, 1);
+            }
+
+            localStorage.setItem('inventory', JSON.stringify(inventoryData));
+            return true;
+        }
+    </script>
+</body>
+
+</html>
